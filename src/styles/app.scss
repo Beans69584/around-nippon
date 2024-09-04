@@ -1,0 +1,936 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Sawarabi+Mincho&family=Noto+Sans+KR:wght@400;700&family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Noto+Serif+TC:wght@400;700&display=swap");
+@import "variables";
+@import "mixins";
+
+// Global Styles
+::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background-color: $accent;
+  color: $paper;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  @include locale-font;
+  margin: 0;
+  padding: 0;
+  background-color: $paper;
+  color: $ink;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// Navbar
+.navbar {
+  background-color: rgba($paper, 0.95);
+  padding: 0.75rem 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  height: 32px;
+  @include locale-font;
+  @include washi-gradient;
+  @include kokedama-shadow;
+
+  &--scrolled {
+    background-color: rgba($paper, 1);
+    box-shadow: 0 2px 10px rgba($ink, 0.05);
+  }
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    color: $ink;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &-text {
+      @include locale-font('serif');
+      color: $ink;
+      font-size: 1.25rem;
+      text-decoration: none;
+      font-weight: 400;
+    }
+  }
+
+  &__menu-container {
+    display: flex;
+    align-items: center;
+  }
+
+  &__menu {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__link {
+    color: $ink;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 1px;
+      background-color: $accent;
+      transition: width 0.3s ease, left 0.3s ease;
+    }
+
+    &:hover,
+    &.active {
+      color: $accent;
+
+      &::after {
+        width: 100%;
+        left: 0;
+      }
+    }
+  }
+
+  &__auth {
+    margin-left: 1rem;
+  }
+
+  &__auth-button {
+    background-color: $accent;
+    color: $paper;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    height: 32px;
+
+    svg {
+      margin-right: 0.5rem;
+    }
+
+    &:hover {
+      background-color: darken($accent, 10%);
+    }
+  }
+
+  &__mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+
+    svg {
+      font-size: 1.5rem;
+      color: $ink;
+    }
+
+    &:hover {
+      svg {
+        color: $accent;
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__language-switcher {
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+
+    button {
+      background: none;
+      border: none;
+      color: $ink;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+
+      &:hover,
+      &.active {
+        color: $accent;
+      }
+
+      &:not(:last-child) {
+        border-right: 1px solid $secondary;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    &__menu-container {
+      display: none;
+    }
+
+    &__mobile-toggle {
+      display: block;
+    }
+  }
+}
+
+// Mobile Menu
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba($ink, 0.5);
+  }
+
+  &__content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 80%;
+    max-width: 300px;
+    background-color: $paper;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -5px 0 15px rgba($ink, 0.1);
+  }
+
+  &.active &__content {
+    transform: translateX(0);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba($ink, 0.1);
+  }
+
+  &__logo {
+    @include locale-font('serif');
+    color: $ink;
+    font-size: 1.25rem;
+    text-decoration: none;
+    font-weight: 400;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: $ink;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $accent;
+    }
+  }
+
+  &__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 1rem 0;
+    flex-grow: 1;
+  }
+
+  &__link {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: $ink;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: $accent;
+      transform: translateX(-101%);
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      background-color: rgba($ink, 0.05);
+      color: $accent;
+
+      &::after {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  &__auth {
+    padding: 1rem;
+    border-top: 1px solid rgba($ink, 0.1);
+  }
+
+  &__auth-button {
+    width: 100%;
+    background-color: $accent;
+    color: $paper;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+
+    svg {
+      margin-right: 0.5rem;
+    }
+
+    &:hover {
+      background-color: darken($accent, 10%);
+    }
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+body.mobile-menu-open {
+  overflow: hidden;
+}
+
+// Hero Section
+.hero {
+  @include locale-font;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("https://cdn.konpeki.co.uk/around-nippon/assets/resized/fuji-san_1920w.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba($ink, 0.5);
+  }
+
+  &__content {
+    text-align: center;
+    color: $paper;
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+    background-color: rgba($ink, 0.7);
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+  }
+
+  &__title {
+    @include locale-font('serif');
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  &__subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  &__cta {
+    appearance: none;
+    display: inline-block;
+    background-color: $accent;
+    color: $paper;
+    padding: 0.8rem 1.5rem;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: darken($accent, 10%);
+    }
+  }
+}
+
+// Feature Section
+.features {
+  padding: 4rem 0;
+  background-color: $paper;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  &__item {
+    text-align: center;
+    padding: 1.5rem;
+    border: 1px solid $secondary;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba($ink, 0.1);
+    }
+
+    svg {
+      font-size: 2rem;
+      color: $accent;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: $ink;
+      @include brush-text;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: $secondary;
+    }
+  }
+}
+
+// About Section
+.about {
+  padding: 4rem 0;
+  background-color: $secondary;
+  color: $paper;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    @include brush-text;
+  }
+
+  p {
+    font-size: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+// Loading Screen
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  &__content {
+    text-align: center;
+  }
+
+  svg {
+    font-size: 4rem;
+    color: $accent;
+    margin-bottom: 1rem;
+  }
+
+  &__text {
+    font-size: 1.5rem;
+    color: $ink;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .navbar {
+    &__menu {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      background-color: rgba($ink, 0.9);
+      padding: 1rem 0;
+
+      &.active {
+        display: flex;
+      }
+
+      li {
+        margin: 0.5rem 0;
+        text-align: center;
+      }
+    }
+
+    &__toggle {
+      display: block;
+    }
+  }
+
+  .hero {
+    &__title {
+      font-size: 2rem;
+    }
+
+    &__subtitle {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Error UI
+#blazor-error-ui {
+  background: $accent;
+  color: $paper;
+  bottom: 0;
+  box-shadow: 0 -2px 10px rgba($ink, 0.2);
+  display: none;
+  left: 0;
+  padding: 1rem;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+
+  .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 1rem;
+    top: 0.5rem;
+    font-weight: bold;
+  }
+}
+
+// Map Styles
+// set body if it has a class of "map-open" to overflow hidden
+body.map-open {
+  overflow: hidden;
+}
+
+.map-container {
+  margin-top: 1.5rem;
+  padding: 2rem 0;
+  height: calc(100vh - 3.5rem);
+
+  #map {
+    height: 100%;
+    width: 100%;
+  }
+
+  #map-controls {
+    position: absolute;
+    top: calc(50% - 50px);
+    right: 10px;
+    z-index: 1;
+
+    button {
+      display: block;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: white;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+    }
+
+    button:hover {
+      background-color: #f0f0f0;
+    }
+  }
+}
+
+// Google Maps InfoWindow Styles
+.gm-style {
+  .gm-style-iw-c {
+    padding: 1rem !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 15px rgba($ink, 0.1) !important;
+
+    .gm-style-iw-chr {
+      .gm-style-iw-ch {
+        div {
+          div {
+            div {
+              div {
+                @include brush-text;
+                font-size: 1.4rem;
+                color: $ink;
+                margin-bottom: 10px;
+                border-bottom: 2px solid $accent;
+                padding-bottom: 0.75rem;
+                padding-left: 1rem;
+                line-height: 1.2;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .gm-style-iw-d {
+      overflow: hidden !important;
+      div[dir="ltr"] {
+        .gm-style {
+          .address {
+            margin: 10px 0;
+            padding-left: 10px;
+            border-left: 3px solid $accent;
+
+            .address-line {
+              font-size: 0.9rem;
+              line-height: 1.4;
+              color: $secondary;
+
+              &.full-width {
+                display: block;
+              }
+
+              &:first-child {
+                font-weight: 600;
+                color: $ink;
+              }
+            }
+          }
+
+          .view-link {
+            margin-top: 12px;
+
+            a {
+              display: inline-block;
+              background-color: $accent;
+              color: $paper;
+              padding: 6px 12px;
+              border-radius: 4px;
+              text-decoration: none;
+              font-size: 0.85rem;
+              transition: background-color 0.2s ease;
+
+              &:hover {
+                background-color: darken($accent, 10%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .gm-ui-hover-effect {
+    top: 0 !important;
+    right: 0 !important;
+    background: rgba($paper, 0.7) !important;
+    border-radius: 50% !important;
+
+    img {
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover img {
+      opacity: 1;
+    }
+  }
+}
+
+.gm-style-iw {
+  @include locale-font;
+
+  .gm-style-iw-d {
+    overflow: auto !important;
+    max-height: none !important;
+  }
+
+  .poi-info-window {
+    padding: 12px;
+  }
+
+  .transit-container {
+    margin-bottom: 10px;
+
+    .transit-title {
+      @include brush-text;
+      font-size: 1.2rem;
+      color: $ink;
+      margin-bottom: 8px;
+    }
+
+    .transit-wheelchair-icon {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 5px;
+    }
+  }
+
+  .address {
+    margin: 10px 0;
+    padding-left: 10px;
+    border-left: 3px solid $accent;
+
+    .address-line {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: $secondary;
+
+      &:first-child {
+        font-weight: 600;
+        color: $ink;
+      }
+    }
+  }
+
+  .view-link {
+    margin-top: 12px;
+
+    a {
+      display: inline-block;
+      background-color: $accent;
+      color: $paper;
+      padding: 6px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: darken($accent, 10%);
+      }
+    }
+  }
+}
+
+.gm-ui-hover-effect {
+  top: 0 !important;
+  right: 0 !important;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// Custom Info Window Content Styles
+.custom-info-window {
+  @include locale-font;
+  padding: 15px;
+
+  .info-window-title {
+    @include brush-text;
+    font-size: 1.4rem;
+    color: $ink;
+    margin-bottom: 10px;
+    border-bottom: 2px solid $accent;
+    padding-bottom: 5px;
+  }
+
+  .info-window-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 10px rgba($ink, 0.1);
+  }
+
+  .info-window-description {
+    font-size: 0.95rem;
+    color: $secondary;
+    margin-bottom: 15px;
+    line-height: 1.4;
+  }
+
+  .info-window-button {
+    display: inline-block;
+    background-color: $accent;
+    color: $paper;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($accent, 10%);
+    }
+  }
+}
+
+.pac-container {
+  background-color: lighten($secondary, 45%);
+  border-radius: 0 0 25px 25px;
+  @include kokedama-shadow;
+  border: 1px solid $secondary;
+  border-top: none;
+  font-family: inherit;
+  z-index: 1050;
+  width: calc(100% - 3rem);
+
+  .pac-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background-color: rgba($accent, 0.1);
+    }
+
+    .pac-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 1rem;
+      color: $secondary;
+    }
+
+    .pac-item-query {
+      font-size: 1rem;
+      color: $ink;
+      flex-grow: 1;
+
+      .pac-matched {
+        font-weight: bold;
+        color: $accent;
+        text-decoration: underline;
+        padding: 0 2px;
+      }
+    }
+  }
+
+  .pac-item-selected {
+    background-color: rgba($accent, 0.2);
+
+    .pac-item-query {
+      color: darken($ink, 10%);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .pac-container {
+    width: calc(100% - 2rem); // Adjusting for smaller modal padding on mobile
+    margin-left: 1rem;
+  }
+}
+
+.backup-server-banner {
+  background-color: $accent;
+  color: $paper;
+  text-align: center;
+  padding: 0.5rem;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem;
+  animation: modalFadeIn 0.3s ease forwards;
+
+  &__content {
+    flex-grow: 1;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    color: $paper;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: darken($paper, 10%);
+    }
+  }
+}
+
+.etaLabel {
+  background-color: rgba(
+    199,
+    62,
+    58,
+    0.8
+  ); // Using the red color from your map style
+  padding: 4px 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+g {
+  &.selected {
+    fill: #a0a0a0 !important;
+  }
+}
