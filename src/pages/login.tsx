@@ -5,6 +5,7 @@ import {
   faLock,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { signIn } from 'next-auth/react';
 import Head from 'next/head';
@@ -95,6 +96,10 @@ const LoginPage: React.FC = () => {
     }, 300);
   };
 
+  const handleGoogleSignIn = () => {
+    signIn('google', { callbackUrl: '/itinerary' });
+  };
+
   return (
     <div className={styles.loginPage}>
       <Head>
@@ -165,9 +170,15 @@ const LoginPage: React.FC = () => {
               {!isLoading && <FontAwesomeIcon icon={faArrowRight} className={styles.submitIcon} />}
             </button>
           </form>
+          <div className={styles.divider}>
+            <span>or</span>
+          </div>
+          <button onClick={handleGoogleSignIn} className={styles.googleButton}>
+            <FontAwesomeIcon icon={faGoogle} className={styles.googleIcon} />
+            Sign in with Google
+          </button>
           <p className={styles.toggleAuthMode}>
             {isLogin ? "Don't have an account? " : 'Already have an account? '}
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <button type="button" onClick={toggleAuthMode}>
               {isLogin ? 'Register' : 'Login'}
             </button>

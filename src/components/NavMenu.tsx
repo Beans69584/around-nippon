@@ -178,34 +178,34 @@ const NavMenu: React.FC = () => {
       title: 'During Your Stay',
       items: [
         {
-          title: 'Transportation',
+          title: t('megaMenu.transportation.title'),
           icon: faTrain,
           link: '/travel-info/transportation',
-          description: "Navigating Japan's efficient transport system",
+          description: t('megaMenu.transportation.description'),
         },
         {
-          title: 'Accommodation',
+          title: t('megaMenu.accommodation.title'),
           icon: faBed,
           link: '/travel-info/accommodation',
-          description: 'From ryokans to capsule hotels',
+          description: t('megaMenu.accommodation.description'),
         },
         {
-          title: 'Food & Dining',
+          title: t('megaMenu.foodAndDining.title'),
           icon: faUtensils,
           link: '/travel-info/food-dining',
-          description: 'Culinary experiences and etiquette',
+          description: t('megaMenu.foodAndDining.description'),
         },
         {
-          title: 'Shopping Guide',
+          title: t('megaMenu.shoppingGuide.title'),
           icon: faShoppingBag,
           link: '/travel-info/shopping-guide',
-          description: 'Where and what to buy',
+          description: t('megaMenu.shoppingGuide.description'),
         },
         {
-          title: 'Connectivity',
+          title: t('megaMenu.connectivity.title'),
           icon: faWifi,
           link: '/travel-info/connectivity',
-          description: 'Staying connected in Japan',
+          description: t('megaMenu.connectivity.description'),
         },
       ],
     },
@@ -213,34 +213,34 @@ const NavMenu: React.FC = () => {
       title: 'Destinations & Experiences',
       items: [
         {
-          title: 'Top Destinations',
+          title: t('megaMenu.topDestinations.title'),
           icon: faMapMarkerAlt,
           link: '/travel-info/top-destinations',
-          description: 'Must-visit places in Japan',
+          description: t('megaMenu.topDestinations.description'),
         },
         {
-          title: 'Hidden Gems',
+          title: t('megaMenu.hiddenGems.title'),
           icon: faGem,
           link: '/travel-info/hidden-gems',
-          description: 'Off-the-beaten-path locations',
+          description: t('megaMenu.hiddenGems.description'),
         },
         {
-          title: 'Culture & Customs',
+          title: t('megaMenu.cultureCustoms.title'),
           icon: faToriiGate,
           link: '/travel-info/culture-customs',
-          description: 'Understanding Japanese traditions',
+          description: t('megaMenu.cultureCustoms.description'),
         },
         {
-          title: 'Language Basics',
+          title: t('megaMenu.languageBasics.title'),
           icon: faLanguage,
           link: '/travel-info/language-basics',
-          description: 'Essential Japanese phrases',
+          description: t('megaMenu.languageBasics.description'),
         },
         {
-          title: 'Festivals & Events',
+          title: t('megaMenu.festivalsEvents.title'),
           icon: faCalendarAlt,
           link: '/travel-info/festivals-events',
-          description: 'Seasonal celebrations',
+          description: t('megaMenu.festivalsEvents.description'),
         },
       ],
     },
@@ -248,22 +248,22 @@ const NavMenu: React.FC = () => {
       title: 'Practical Information',
       items: [
         {
-          title: 'Health & Safety',
+          title: t('megaMenu.healthAndSafety.title'),
           icon: faFirstAid,
           link: '/travel-info/health-safety',
-          description: 'Staying safe and healthy',
+          description: t('megaMenu.healthAndSafety.description'),
         },
         {
-          title: 'Emergency Info',
+          title: t('megaMenu.emergency.title'),
           icon: faExclamationTriangle,
           link: '/travel-info/emergency',
-          description: 'Important contacts and procedures',
+          description: t('megaMenu.emergency.description'),
         },
         {
-          title: 'Money Matters',
+          title: t('megaMenu.moneyMatters.title'),
           icon: faExchangeAlt,
           link: '/travel-info/money-matters',
-          description: 'Currency, ATMs, and payment methods',
+          description: t('megaMenu.moneyMatters.description'),
         },
       ],
     },
@@ -460,7 +460,7 @@ const NavMenu: React.FC = () => {
         </div>
       </div>
       {process.env.NODE_ENV === 'development' && devBannerState !== 'dismissed' && (
-        <div className={`${styles['development-banner']} ${styles[devBannerState]}`}>
+        <div className={`${styles['development-banner']} ${devBannerState === 'dismissing' ? styles.dismissing : ''}`}>
           <div className={styles['development-banner__text-container']}>
             <h1>{t('developmentBanner')}</h1>
             <h2>{t('developmentBannerSubtitle')}</h2>
