@@ -1,22 +1,110 @@
-Copyright (c) 2024, Jacob Walton
+**Copyright Notice**
 
-Terms and Conditions
+Copyright © 2024, Jacob Walton. All rights reserved.
 
-Viewing: You are permitted to view the source code contained within this repository for reference purposes only.
+**License Agreement**
 
-Usage: You are NOT permitted to use, execute, compile or run the code contained within this repository for any purpose without explicit written permission from the copyright holder.
+This License Agreement ("Agreement") is a legal contract between you ("Licensee") and Jacob Walton ("Licensor") regarding the source code contained within this repository ("Code").
 
-Modification: You are NOT permitted to modify, adapt or create derivative works from the code within this repository.
+By accessing or viewing the Code, you agree to be bound by the terms and conditions of this Agreement. If you do not agree to these terms, you must not access or view the Code.
 
-Distribution: You are NOT permitted to distribute, publish or share the code or any modified versions of the code, in any form.
+---
 
-Commercial Use: You are NOT permitted to use the code in any commerical context, or for any commerical pupose, without explicit written permission from the copyright holder.
+**1. Definitions**
 
-No Warranty: This code is provided "as-is", without any warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose or non-infringement. In no event shall the copyright holder be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of, or in connection with the code or the use or other dealings in the code.
+1.1 **"Code"** means the source code contained within this repository.
 
-Contact Information
+1.2 **"Licensee"** means any individual or entity that accesses or views the Code.
 
-If you wish to use, modify or distribute the code or you have any questions regarding this license, you must contact the copyright holder at:
+1.3 **"Licensor"** means Jacob Walton.
 
-Email: jacob-walton@konpeki.co.uk
-Website: https://konpeki.co.uk
+---
+
+**2. Grant of Rights**
+
+2.1 **Viewing Rights**: The Licensor grants the Licensee a non-exclusive, non-transferable, revocable license to view the Code solely for reference purposes.
+
+---
+
+**3. Restrictions**
+
+3.1 **Prohibited Uses**: Except as expressly permitted under Clause 2.1, the Licensee shall not:
+
+   a) Use, execute, compile, run, or otherwise utilize the Code in any manner.
+
+   b) Modify, adapt, translate, or create derivative works based on the Code.
+
+   c) Distribute, publish, sublicense, sell, lend, rent, lease, or otherwise transfer the Code or any derivative works to any third party.
+
+   d) Use the Code in any commercial context or for any commercial purpose without the prior explicit written consent of the Licensor.
+
+---
+
+**4. Intellectual Property Rights**
+
+4.1 **Ownership**: All intellectual property rights in and to the Code are and shall remain the exclusive property of the Licensor.
+
+4.2 **No Transfer of Rights**: Nothing in this Agreement shall operate to transfer any intellectual property rights from the Licensor to the Licensee.
+
+---
+
+**5. Disclaimer of Warranties**
+
+5.1 **"As Is" Basis**: The Code is provided on an "as is" and "as available" basis without warranties of any kind, either express or implied.
+
+5.2 **No Warranties**: The Licensor expressly disclaims all warranties, including but not limited to the implied warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+---
+
+**6. Limitation of Liability**
+
+6.1 **Exclusion of Liability**: To the maximum extent permitted by law, the Licensor shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages arising out of or in connection with the Code or this Agreement, whether in contract, tort (including negligence), breach of statutory duty, or otherwise.
+
+---
+
+**7. Indemnification**
+
+7.1 **Licensee's Indemnity**: The Licensee agrees to indemnify, defend, and hold harmless the Licensor from and against any and all claims, liabilities, damages, losses, and expenses (including legal fees) arising from or in any way connected with the Licensee's breach of this Agreement or unauthorized use of the Code.
+
+---
+
+**8. Termination**
+
+8.1 **Termination by Licensor**: The Licensor may terminate this Agreement immediately upon written notice if the Licensee breaches any term of this Agreement.
+
+8.2 **Effect of Termination**: Upon termination, the Licensee must cease all access to and use of the Code and destroy any copies in their possession or control.
+
+---
+
+**9. Governing Law and Jurisdiction**
+
+9.1 **Governing Law**: This Agreement shall be governed by and construed in accordance with the laws of England and Wales.
+
+9.2 **Jurisdiction**: The courts of England and Wales shall have exclusive jurisdiction to settle any dispute or claim arising out of or in connection with this Agreement or its subject matter.
+
+---
+
+**10. General Provisions**
+
+10.1 **Severability**: If any provision of this Agreement is held to be invalid or unenforceable, such provision shall be struck, and the remaining provisions shall remain in full force and effect.
+
+10.2 **Entire Agreement**: This Agreement constitutes the entire agreement between the parties concerning its subject matter and supersedes all prior agreements or understandings.
+
+10.3 **Amendments**: No amendment or modification of this Agreement shall be valid unless in writing and signed by the Licensor.
+
+10.4 **Waiver**: No failure or delay by the Licensor to exercise any right or remedy provided under this Agreement shall constitute a waiver of that or any other right or remedy.
+
+---
+
+**11. Contact Information**
+
+For permissions, inquiries, or questions regarding this Agreement, please contact the Licensor at:
+
+- **Email**: jacob-walton@konpeki.co.uk
+- **Website**: [https://konpeki.co.uk](https://konpeki.co.uk)
+
+---
+
+**Acceptance**
+
+By accessing or viewing the Code, the Licensee acknowledges that they have read, understood, and agree to be bound by the terms and conditions of this Agreement.
