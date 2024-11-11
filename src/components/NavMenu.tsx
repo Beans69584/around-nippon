@@ -140,7 +140,7 @@ const NavMenu: React.FC = () => {
 
   const travelInfoSections = [
     {
-      title: 'Planning Your Trip',
+      title: t('megaMenu.beforeYouGo.title'),
       items: [
         {
           title: t('megaMenu.japanOverview.title'),
@@ -175,7 +175,7 @@ const NavMenu: React.FC = () => {
       ],
     },
     {
-      title: 'During Your Stay',
+      title: t('megaMenu.duringStay.title'),
       items: [
         {
           title: t('megaMenu.transportation.title'),
@@ -210,7 +210,7 @@ const NavMenu: React.FC = () => {
       ],
     },
     {
-      title: 'Destinations & Experiences',
+      title: t('megaMenu.destinationsExperiences.title'),
       items: [
         {
           title: t('megaMenu.topDestinations.title'),
@@ -245,7 +245,7 @@ const NavMenu: React.FC = () => {
       ],
     },
     {
-      title: 'Practical Information',
+      title: t('megaMenu.practicalInformation.title'),
       items: [
         {
           title: t('megaMenu.healthAndSafety.title'),

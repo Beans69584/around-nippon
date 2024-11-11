@@ -10,16 +10,16 @@ import styles from '@styles/LanguageSwitcher.module.scss';
 import { useToast } from '@contexts/ToastContext';
 
 const languages = [
-  { code: 'en', name: 'English', message: 'Switched to English' },
-  { code: 'es', name: 'Español', message: 'Cambiado a Español' },
-  { code: 'fr', name: 'Français', message: 'Changé en Français' },
-  { code: 'de', name: 'Deutsch', message: 'Gewechselt zu Deutsch' },
-  { code: 'it', name: 'Italiano', message: 'Passato a Italiano' },
-  { code: 'pl', name: 'Polski', message: 'Przełączono na Polski' },
-  { code: 'ja', name: '日本語', message: '日本語に切り替えました' },
-  { code: 'ko', name: '한국어', message: '한국어로 전환되었습니다' },
-  { code: 'zh-Hans', name: '简体中文', message: '已切换到简体中文' },
-  { code: 'zh-Hant', name: '繁體中文', message: '已切換到繁體中文' },
+  { code: 'en', name: 'English', message: 'Switching to English' },
+  { code: 'es', name: 'Español', message: 'Cambiando a Español' },
+  { code: 'fr', name: 'Français', message: 'Passage à Français' },
+  { code: 'de', name: 'Deutsch', message: 'Wechseln zu Deutsch' },
+  { code: 'it', name: 'Italiano', message: 'Passando a Italiano' },
+  { code: 'pl', name: 'Polski', message: 'Przełączanie na Polski' },
+  { code: 'ja', name: '日本語', message: '日本語に切り替えています' },
+  { code: 'ko', name: '한국어', message: '한국어로 전환 중입니다' },
+  { code: 'zh-Hans', name: '简体中文', message: '正在切换到简体中文' },
+  { code: 'zh-Hant', name: '繁體中文', message: '正在切換到繁體中文' },
 ];
 
 export default function LanguageSwitcher() {
@@ -46,8 +46,11 @@ export default function LanguageSwitcher() {
 
     try {
       await router.push(router.pathname, router.asPath, { locale: lng });
-      showToast(newLanguage.message, 'success', 1500);
       if (isMobile) setMobileMenuOpen(false);
+      if (window.location.pathname.includes('/itinerary')) {
+        window.location.reload();
+      }
+      showToast(newLanguage.message, 'success', 1500);
     } catch (error) {
       console.error('Failed to change language:', error);
       showToast('Failed to switch language', 'error');

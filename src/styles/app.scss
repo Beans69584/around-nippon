@@ -1,6 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Sawarabi+Mincho&family=Noto+Sans+KR:wght@400;700&family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Noto+Serif+TC:wght@400;700&display=swap");
 @import "variables";
 @import "mixins";
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
 
 // Global Styles
 ::-webkit-scrollbar {
@@ -71,7 +72,7 @@ body {
     }
 
     &-text {
-      @include locale-font('serif');
+      @include locale-font("serif");
       color: $ink;
       font-size: 1.25rem;
       text-decoration: none;
@@ -261,7 +262,7 @@ body {
   }
 
   &__logo {
-    @include locale-font('serif');
+    @include locale-font("serif");
     color: $ink;
     font-size: 1.25rem;
     text-decoration: none;
@@ -355,194 +356,6 @@ body {
 
 body.mobile-menu-open {
   overflow: hidden;
-}
-
-// Hero Section
-.hero {
-  @include locale-font;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-image: url("https://cdn.konpeki.co.uk/around-nippon/assets/resized/fuji-san_1920w.jpg");
-  background-size: cover;
-  background-position: center;
-  position: relative;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba($ink, 0.5);
-  }
-
-  &__content {
-    text-align: center;
-    color: $paper;
-    position: relative;
-    z-index: 1;
-    padding: 2rem;
-    background-color: rgba($ink, 0.7);
-    width: 80%;
-    max-width: 400px;
-    border-radius: 10px;
-  }
-
-  &__title {
-    @include locale-font('serif');
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-
-  &__subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-  }
-
-  &__cta {
-    appearance: none;
-    display: inline-block;
-    background-color: $accent;
-    color: $paper;
-    padding: 0.8rem 1.5rem;
-    text-decoration: none;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    border-radius: 5px;
-
-    &:hover {
-      background-color: darken($accent, 10%);
-    }
-  }
-}
-
-// Feature Section
-.features {
-  padding: 4rem 0;
-  background-color: $paper;
-
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-  }
-
-  &__item {
-    text-align: center;
-    padding: 1.5rem;
-    border: 1px solid $secondary;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 5px 15px rgba($ink, 0.1);
-    }
-
-    svg {
-      font-size: 2rem;
-      color: $accent;
-      margin-bottom: 1rem;
-    }
-
-    h3 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      color: $ink;
-      @include brush-text;
-    }
-
-    p {
-      font-size: 0.9rem;
-      color: $secondary;
-    }
-  }
-}
-
-// About Section
-.about {
-  padding: 4rem 0;
-  background-color: $secondary;
-  color: $paper;
-
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    text-align: center;
-    @include brush-text;
-  }
-
-  p {
-    font-size: 1rem;
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-  }
-}
-
-// Loading Screen
-.loading-screen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-
-  &__content {
-    text-align: center;
-  }
-
-  svg {
-    font-size: 4rem;
-    color: $accent;
-    margin-bottom: 1rem;
-  }
-
-  &__text {
-    font-size: 1.5rem;
-    color: $ink;
-  }
-}
-
-// Responsive Design
-@media (max-width: 768px) {
-  .navbar {
-    &__menu {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      background-color: rgba($ink, 0.9);
-      padding: 1rem 0;
-
-      &.active {
-        display: flex;
-      }
-
-      li {
-        margin: 0.5rem 0;
-        text-align: center;
-      }
-    }
-
-    &__toggle {
-      display: block;
-    }
-  }
-
-  .hero {
-    &__title {
-      font-size: 2rem;
-    }
-
-    &__subtitle {
-      font-size: 1rem;
-    }
-  }
 }
 
 // Error UI
@@ -824,60 +637,82 @@ body.map-open {
 }
 
 .pac-container {
-  background-color: lighten($secondary, 45%);
-  border-radius: 0 0 25px 25px;
+  background-color: $paper;
+  border-radius: 8px;
+  margin-top: 4px;
   @include kokedama-shadow;
-  border: 1px solid $secondary;
-  border-top: none;
+  border: 1px solid rgba($ink, 0.1);
   font-family: inherit;
   z-index: 1050;
-  width: calc(100% - 3rem);
+  width: 100%;
+  padding: 0.5rem;
+  backdrop-filter: blur(10px);
+  animation: dropdownFadeIn 0.2s ease;
 
   .pac-item {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 0.25rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     &:hover {
-      background-color: rgba($accent, 0.1);
+      background-color: rgba($ink, 0.05);
+      transform: translateX(4px);
     }
 
     .pac-icon {
-      width: 20px;
-      height: 20px;
-      margin-right: 1rem;
+      width: 16px;
+      height: 16px;
+      margin-right: 0.75rem;
       color: $secondary;
+      opacity: 0.7;
     }
 
     .pac-item-query {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: $ink;
       flex-grow: 1;
 
       .pac-matched {
-        font-weight: bold;
         color: $accent;
-        text-decoration: underline;
-        padding: 0 2px;
+        font-weight: 500;
+        text-decoration: none;
+        position: relative;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background-color: $accent;
+          opacity: 0.3;
+        }
       }
     }
   }
 
   .pac-item-selected {
-    background-color: rgba($accent, 0.2);
+    background-color: rgba($accent, 0.1);
+    transform: translateX(4px);
 
     .pac-item-query {
-      color: darken($ink, 10%);
+      color: $accent;
     }
-  }
-}
 
-@media (max-width: 480px) {
-  .pac-container {
-    width: calc(100% - 2rem); // Adjusting for smaller modal padding on mobile
-    margin-left: 1rem;
+    .pac-icon {
+      opacity: 1;
+      color: $accent;
+    }
   }
 }
 
@@ -932,5 +767,35 @@ body.map-open {
 g {
   &.selected {
     fill: #a0a0a0 !important;
+  }
+}
+
+// only apply to children of element with data-format="extra-gaps"
+section[data-format="extra-gaps"] {
+  .slick-list {
+    margin: 0 -1rem; // Compensate for slide padding
+  }
+
+  .slick-track {
+    display: flex;
+    gap: 1rem; // Add horizontal gap between slides
+  }
+
+  .slick-dots {
+    bottom: -45px;
+    transition: color 0.3s ease !important;
+
+    li {
+      margin: 0 5px;
+    }
+
+    li.slick-active button:before {
+      color: $accent;
+    }
+
+    button:before {
+      color: $secondary;
+      font-size: 12px;
+    }
   }
 }

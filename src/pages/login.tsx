@@ -25,6 +25,7 @@ const LoginPage: React.FC = () => {
   const [shake, setShake] = useState(false);
   const [fade, setFade] = useState(false);
   const router = useRouter();
+  const currentHost = window.location.hostname;
 
   useEffect(() => {
     setError('');
@@ -173,14 +174,21 @@ const LoginPage: React.FC = () => {
           <div className={styles.divider}>
             <span>or</span>
           </div>
-          <button onClick={handleGoogleSignIn} className={styles.googleButton}>
-            <FontAwesomeIcon icon={faGoogle} className={styles.googleIcon} />
-            Sign in with Google
-          </button>
+          {currentHost != "localhost" ?
+              <button onClick={handleGoogleSignIn} className={styles.googleButton}>
+                <FontAwesomeIcon icon={faGoogle} className={styles.googleIcon}/>
+                Sign in with Google
+              </button>
+              :
+              <button className={styles.googleButton} disabled={true}>
+                <FontAwesomeIcon icon={faGoogle} className={styles.googleIcon}/>
+                Sign in with Google
+              </button>
+          }
           <p className={styles.toggleAuthMode}>
             {isLogin ? "Don't have an account? " : 'Already have an account? '}
             <button type="button" onClick={toggleAuthMode}>
-              {isLogin ? 'Register' : 'Login'}
+            {isLogin ? 'Register' : 'Login'}
             </button>
           </p>
         </div>

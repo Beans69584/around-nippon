@@ -27,6 +27,10 @@ import spinnerStyles from '@styles/withAuth.module.scss';
 import type { Destination } from '@type/itinerary';
 import exportPDF from '@utils/exportPDF';
 import Selector from '@components/Select';
+import { motion, AnimatePresence } from 'framer-motion';
+import TimelineItem from '@components/TimelineItem';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/router';
 
 const ItineraryMap = dynamic(() => import('@components/ItineraryMap'), {
   ssr: false,
@@ -47,29 +51,34 @@ const ItineraryPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState<'date' | 'name' | 'budget'>('date');
-  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [currentDate, setCurrentDate] = useState<string | null>(null);
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
-
+  const [view, setView] = useState<'list' | 'timeline' | 'map'>('timeline');
+  const [selectedDates, setSelectedDates] = useState<Set<string>>(new Set());
+  const t = useTranslations('itinerary.itineraryPage');
+  const router = useRouter();
+  const locale = router.locale;
+  
   useEffect(() => {
+    const loadGoogleMapsAPI = async () => {
+      const loader = new Loader({
+        apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+        version: 'weekly',
+        libraries: ['places', 'geometry'],
+        language: locale,
+        region: 'JP',
+      });
+  
+      try {
+        await loader.load();
+        setGoogleMapsLoaded(true);
+      } catch (error) {
+        console.error('Error loading Google Maps:', error);
+      }
+    };
     loadGoogleMapsAPI();
-  }, []);
-
-  const loadGoogleMapsAPI = async () => {
-    const loader = new Loader({
-      apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
-      version: 'weekly',
-      libraries: ['places', 'geometry'],
-    });
-
-    try {
-      await loader.load();
-      setGoogleMapsLoaded(true);
-    } catch (error) {
-      console.error('Error loading Google Maps:', error);
-    }
-  };
+  }, [locale]);
 
   const loadItinerary = useCallback(async () => {
     if (!(session?.user as { id?: string })?.id) return;
@@ -83,7 +92,7 @@ const ItineraryPage: React.FC = () => {
           .map((dest: Destination) => ({
             ...dest,
             id: dest.id.toString(),
-            date: dest.date.split('T')[0],
+            date: new Date(dest.date).toISOString().split('T')[0],
           }))
           .sort(
             (a: Destination, b: Destination) =>
@@ -109,7 +118,7 @@ const ItineraryPage: React.FC = () => {
 
   const saveItinerary = useCallback(async () => {
     if (!(session?.user as { id?: string })?.id) return;
-    if (destinations.length === 0) return;
+    if (destinations.length === 0 && !hasChanges) return;
 
     try {
       const response = await fetch('/api/v1/itinerary', {
@@ -133,7 +142,7 @@ const ItineraryPage: React.FC = () => {
     } catch (error) {
       console.error('Failed to save itinerary:', error);
     }
-  }, [destinations, session]);
+  }, [destinations, session, hasChanges]);
 
   useEffect(() => {
     if (status === 'authenticated' && !isLoading && hasChanges) {
@@ -148,7 +157,7 @@ const ItineraryPage: React.FC = () => {
         {
           ...newDestination,
           travelMode: 'DRIVING' as const,
-          id: Date.now(),
+          id: Date.now(), // Will be a number
         },
       ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       return updatedDestinations;
@@ -207,7 +216,7 @@ const ItineraryPage: React.FC = () => {
       return nameMatch || locationMatch;
     })
     .filter((dest) => filterType === 'all' || dest.type === filterType)
-    .filter((dest) => !currentDate || dest.date === currentDate) // This line is updated
+    .filter((dest) => selectedDates.size === 0 || selectedDates.has(dest.date))
     .sort((a, b) => {
       if (sortBy === 'date') {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -234,30 +243,31 @@ const ItineraryPage: React.FC = () => {
     setCurrentDate(date);
   };
 
-  const uniqueDates = Array.from(new Set(destinations.map((dest) => dest.date))).sort();
+  const handleDateSelection = (date: string) => {
+    setSelectedDates(prev => {
+      const newDates = new Set(prev);
+      if (newDates.has(date)) {
+        newDates.delete(date);
+      } else {
+        newDates.add(date);
+      }
+      return newDates;
+    });
+  };
 
-  const filterTypeOptions = [
-    { value: 'all', label: 'All Types' },
-    { value: 'attraction', label: 'Attraction' },
-    { value: 'restaurant', label: 'Restaurant' },
-    { value: 'accommodation', label: 'Accommodation' },
-    { value: 'transport', label: 'Transport' },
-  ];
+  const uniqueDates = Array.from(new Set(destinations.map((dest) => dest.date)));
 
-  const sortByOptions = [
-    { value: 'date', label: 'Sort by Date' },
-    { value: 'name', label: 'Sort by Name' },
-    { value: 'budget', label: 'Sort by Budget' },
-  ];
+  // Fix function name consistency
+  const handleEdit = (destination: Destination) => {
+    setEditingDestination(destination);
+    setIsModalOpen(true);
+  };
 
-
-  const dateOptions = [
-    { value: "__all__", label: "All Dates" },
-    ...uniqueDates.map(date => ({
-      value: date,
-      label: new Date(date).toLocaleDateString()
-    }))
-  ];
+  // Fix function name consistency
+  const handleDelete = (id: number) => {
+    setDestinations((prev) => prev.filter((d) => d.id !== id));
+    setHasChanges(true);
+  };
 
   return (
     <div className={styles.itineraryPage}>
@@ -268,63 +278,86 @@ const ItineraryPage: React.FC = () => {
 
       <NavMenu />
 
-      <main className={styles.itineraryContent}>
-        <div className={styles.mainContent}>
-          <div className={styles.controls}>
-            <div className={styles.searchBar}>
-              <FontAwesomeIcon icon={faSearch} />
-              <input
-                type="text"
-                placeholder="Search destinations..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+      <main className={styles.itineraryLayout}>
+        {/* Date Navigation Sidebar */}
+        <aside className={styles.dateSidebar}>
+          <div className={styles.dateNav}>
+            <h2>{t('dateNav')}</h2>
+            <div className={styles.dateList}>
+              {uniqueDates.map((date) => (
+                <button
+                  key={date}
+                  className={`${styles.dateButton} ${selectedDates.has(date) ? styles.active : ''}`}
+                  onClick={() => handleDateSelection(date)}
+                >
+                  <span className={styles.dayNumber}>
+                    {new Date(date).toLocaleDateString(locale, { day: 'numeric' })}
+                  </span>
+                  <span className={styles.monthYear}>
+                    {new Date(date).toLocaleDateString(locale, { month: 'short', year: 'numeric' })}
+                  </span>
+                </button>
+              ))}
             </div>
-            <div className={styles.filterSort}>
-              <Selector
-                options={filterTypeOptions}
-                placeholder="Select Type"
-                onValueChange={(value) => setFilterType(value as string)}
-              />
+          </div>
+        </aside>
 
-              <Selector
-                options={sortByOptions}
-                placeholder="Select Sort"
-                onValueChange={(value) => setSortBy(value as 'date' | 'name' | 'budget')}
-              />
-            </div>
+        {/* Main Content Area */}
+        <section className={styles.mainContent}>
+          <div className={styles.contentHeader}>
             <div className={styles.viewControls}>
               <button
-                className={`${styles.viewButton} ${viewMode === 'list' ? styles.active : ''}`}
-                onClick={() => setViewMode('list')}
-                type="button"
+                className={`${styles.viewButton} ${view === 'timeline' ? styles.active : ''}`}
+                onClick={() => setView('timeline')}
               >
-                <FontAwesomeIcon icon={faList} /> List
+                {t('timelineView')}
               </button>
               <button
-                className={`${styles.viewButton} ${viewMode === 'map' ? styles.active : ''}`}
-                onClick={() => setViewMode('map')}
-                type="button"
+                className={`${styles.viewButton} ${view === 'list' ? styles.active : ''}`}
+                onClick={() => setView('list')}
               >
-                <FontAwesomeIcon icon={faMap} /> Map
+                {t('listView')}
               </button>
+            </div>
+
+            <div className={styles.searchTools}>
+              <div className={styles.searchBar}>
+                <FontAwesomeIcon icon={faSearch} />
+                <input
+                  type="text"
+                  placeholder="Search destinations..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              {/* Filters and sorting moved to dropdown menu */}
             </div>
           </div>
 
-          <div className={styles.dateNavigation}>
-            <FontAwesomeIcon icon={faCalendarAlt} />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={view}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className={styles.contentArea}
+            >
+              {view === 'timeline' && (
+                <div className={styles.timeline}>
+                  {/* New Timeline View Implementation */}
+                  {filteredDestinations.map((dest, index) => (
+                    <TimelineItem
+                      key={dest.id}
+                      destination={dest}
+                      index={index}
+                      onEdit={() => handleEdit(dest)}
+                      onDelete={() => handleDelete(dest.id)}
+                    />
+                  ))}
+                </div>
+              )}
 
-            <Selector
-              options={dateOptions}
-              placeholder="Select Date"
-              value={currentDate}
-              onValueChange={(value) => handleDateChange(value)}
-            />
-          </div>
-
-          <div className={styles.contentArea}>
-            {viewMode === 'list' && (
-              <div className={styles.itineraryArea}>
+              {view === 'list' && (
                 <DragDropContext onDragEnd={onDragEnd}>
                   <Droppable droppableId="destinations">
                     {(provided) => (
@@ -351,14 +384,9 @@ const ItineraryPage: React.FC = () => {
                                     destination={dest}
                                     index={index}
                                     sequenceNumber={sequenceNumbers[index]}
-                                    onEdit={() => {
-                                      setEditingDestination(dest);
-                                      setIsModalOpen(true);
-                                    }}
-                                    onDelete={() => handleDeleteDestination(dest.id)}
-                                    onTravelModeChange={(id: number, mode: 'DRIVING' | 'WALKING' | 'NONE') =>
-                                      handleTravelModeChange(id, mode)
-                                    }
+                                    onEdit={() => handleEdit(dest)}
+                                    onDelete={() => handleDelete(dest.id)}
+                                    onTravelModeChange={handleTravelModeChange}
                                   />
                                 </div>
                               )}
@@ -366,50 +394,34 @@ const ItineraryPage: React.FC = () => {
                           );
                         })}
                         {provided.placeholder}
-                        {filteredDestinations.length === 0 && (
-                          <div className={styles.emptyState}>
-                            <FontAwesomeIcon icon={faRoute} className={styles.icon} />
-                            <p className={styles.mainMessage}>No destinations found</p>
-                            <p className={styles.subMessage}>
-                              Try adjusting your search or filter settings
-                            </p>
-                          </div>
-                        )}
                       </div>
                     )}
                   </Droppable>
                 </DragDropContext>
-              </div>
-            )}
-            {viewMode === 'map' && googleMapsLoaded && (
-              <div className={styles.mapContainer}>
-                <ItineraryMap
-                  key={destinations.map((d) => `${d.id}-${d.travelMode}`).join(',')}
-                  destinations={filteredDestinations}
-                />
-              </div>
-            )}
-          </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </section>
 
-          <div className={styles.actionButtons}>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className={styles.btnPrimary}
-              type="button"
-            >
-              <FontAwesomeIcon icon={faPlus} /> Add Destination
-            </button>
-            <button
-              onClick={() => exportPDF(destinations, exchangeRate)}
-              className={styles.btnSecondary}
-              type="button"
-            >
-              <FontAwesomeIcon icon={faFileExport} /> Export PDF
-            </button>
-          </div>
-        </div>
+        {/* Map Sidebar */}
+        <aside className={styles.mapSidebar}>
+          {googleMapsLoaded && (
+            <div className={styles.mapContainer}>
+              <ItineraryMap
+                key={destinations.map((d) => `${d.id}-${d.travelMode}`).join(',')}
+                destinations={filteredDestinations}
+              />
+            </div>
+          )}
+        </aside>
       </main>
 
+      {/* Float Action Button */}
+      <button onClick={() => setIsModalOpen(true)} className={styles.fab}>
+        <FontAwesomeIcon icon={faPlus} />
+      </button>
+
+      {/* Modal remains unchanged */}
       {isModalOpen && googleMapsLoaded && (
         <DestinationModal
           onClose={() => {

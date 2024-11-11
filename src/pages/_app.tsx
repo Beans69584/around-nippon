@@ -48,6 +48,7 @@ function App({ Component, pageProps }: AppProps) {
         basePath={`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/auth`}
       >
         <ToastProvider>
+          {/* Removed the <link> tag from here */}
           <Component {...pageProps} prisma={prisma} />
         </ToastProvider>
       </SessionProvider>
